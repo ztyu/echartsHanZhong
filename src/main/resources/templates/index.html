@@ -9,11 +9,12 @@
 </head>
 <body>
 <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-<div id="main" style="width: 600px;height:400px;"></div>
-<!--<script type="text/javascript" th:src="@{/static/js/jquery.js}"></script>
-<script type="text/javascript" th:src="@{/static/js/echarts.min.js}"></script>-->
-<script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
-<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+<div id="main" style="width: 100%;height:900px;"></div>
+<script type="text/javascript" th:src="@{/static/js/jquery.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/echarts.min.js}"></script>
+<!--<script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>-->
+<!--<script type="text/javascript" th:src="@{/static/js/hanzhong.geojson}"></script>-->
 <script type="text/javascript">
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'));
@@ -45,108 +46,130 @@
     /*var uploadedDataURL = getGeoJson();
     console.info("------" + JSON.parse(uploadedDataURL));*/
 
+    showProvince();
+
     function showProvince() {
+        console.info("----------------1");
         var name = 'bj';
-        myChart.showLoading();
+        //myChart.showLoading();
 
-        $.get(getGeoJson(), function (geoJson) {
+        $.ajax({
+            url: "http://127.0.0.1:8088/static/js/hz.geojson",
+            dataType: "text",
+            success: function (data) {
+                showMap(data);
 
-            // myChart.hideLoading();
-
-            echarts.registerMap(name, geoJson);
-
-            myChart.setOption(option = {
-                backgroundColor: '#044060',
-                title: {
-                    text: "长清区示例",
-
-                    left: 'center',
-                    textStyle: {
-                        color: '#ffffff'
-                    }
-                },
-                visualMap: {
-                    min: 0,
-                    max: 45000,
-                    left: 'left',
-                    top: 'bottom',
-                    text: ['高', '低'], // 文本，默认为数值文本
-                    calculable: true,
-                    inRange: {
-                        color: ['yellow', 'lightskyblue', 'orangered']
-                    },
-                    textStyle: {
-                        color: '#ffffff'
-                    }
-                },
-                series: [{
-                    type: 'map',
-                    mapType: name,
-                    label: {
-                        normal: {
-                            show: true
-                        },
-                        emphasis: {
-                            textStyle: {
-                                color: '#fff'
-                            }
-                        }
-                    },
-                    itemStyle: {
-
-                        normal: {
-                            borderColor: '#389BB7',
-                            areaColor: '#fff',
-                        },
-                        emphasis: {
-                            areaColor: '#389BB7',
-                            borderWidth: 0
-                        }
-                    },
-                    animation: false,
-                    data: [{
-                        name: '平安街道',
-                        value: 18163
-                    }, {
-                        name: '文昌街道',
-                        value: 22036
-                    }, {
-                        name: '崮云湖街道',
-                        value: 39825
-                    }, {
-                        name: '归德镇',
-                        value: 28405
-                    }, {
-                        name: '张夏镇',
-                        value: 15212
-                    }, {
-                        name: '五峰山街道',
-                        value: 26681
-                    }, {
-                        name: '孝里镇',
-                        value: 11161,
-                    }, {
-                        name: '双泉镇',
-                        value: 20687
-                    }, {
-                        name: '马山镇',
-                        value: 51488,
-                    }, {
-                        name: '万德镇',
-                        value: 23053
-                    }]
-                    // animationDurationUpdate: 1000,
-                    // animationEasingUpdate: 'quinticInOut'
-                }]
-            });
-        });
+            }
+        })
     }
 
 
-    showProvince();
+    function showMap(geoJson){
+        var name = 'bj';
+        echarts.registerMap(name, geoJson);
+
+        myChart.setOption(option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}<br/>{c} (p / km2)'
+            },
+            backgroundColor: '#044060',
+            title: {
+                text: "汉中市烟区适应图",
+
+                left: 'center',
+                textStyle: {
+                    color: '#ffffff'
+                }
+            },
+            visualMap: {
+                min: 0,
+                max: 45000,
+                left: 'left',
+                top: 'bottom',
+                text: ['高', '低'], // 文本，默认为数值文本
+                calculable: true,
+                inRange:{
+                    color: ['yellow','lightskyblue', 'orangered']
+                },
+                textStyle: {
+                    color: '#ffffff'
+                }
+            },
+            series: [{
+                type: 'map',
+                mapType: name,
+                label: {
+                    normal: {
+                        show: true
+                    },
+                    emphasis: {
+                        textStyle: {
+                            color: '#fff'
+                        }
+                    }
+                },
+                itemStyle: {
+
+                    normal: {
+                        borderColor: '#389BB7',
+                        areaColor: '#fff',
+                    },
+                    emphasis: {
+                        areaColor: '#389BB7',
+                        borderWidth: 0
+                    }
+                },
+                animation: false,
+                data: [{
+                    name: '略阳县',
+                    value: 18163
+                }, {
+                    name: '勉县',
+                    value: 22036
+                }, {
+                    name: '留坝县',
+                    value: 22036
+                }, {
+                    name: '城固县',
+                    value: 22036
+                }, {
+                    name: '洋县',
+                    value: 22036
+                }, {
+                    name: '佛坪县',
+                    value: 22036
+                }, {
+                    name: '西乡县',
+                    value: 22036
+                }, {
+                    name: '镇巴县',
+                    value: 22036
+                }, {
+                    name: '南郑区',
+                    value: 22036
+                }, {
+                    name: '宁强县',
+                    value: 100
+                }, {
+                    name: '汉台区',
+                    value: 200
+                }
+                ]
+                // animationDurationUpdate: 1000,
+                // animationEasingUpdate: 'quinticInOut'
+            }]
+        });
+    }
+
+    myChart.on('click', function(param) {
+        console.log("------------------gregre");
+        //遍历取到provincesText 中的下标  去拿到对应的省js
+    });
 
 
-    //展示对应的省
+
+    /*//展示对应的省
     function getGeoJson(pText,pName) {
         loadBdScript('$' + pName + 'JS', 'static/js/' + pName + '.geojson', function() {
             //初始化echarts
@@ -161,7 +184,7 @@
         //script.src = "/static/js/demo.js";
         script.id = scriptId;
         document.getElementsByTagName("head")[0].appendChild(script);
-    };
+    };*/
 
 
 </script>

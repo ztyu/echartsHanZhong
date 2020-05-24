@@ -1,125 +1,77 @@
 <!DOCTYPE html>
-<html style="height: 100%">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <title>汉中</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>第一个 ECharts 实例1</title>
 </head>
-<body style="height: 100%; margin: 0">
-<div id="container" style="height: 100%"></div>
-<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
-<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
-<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
-<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
-<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
-<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
-<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>-->
-<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
-<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
 <script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.js"></script>
+<div id="map" style="width:600px;height: 700px;margin: 0 auto"></div>
 <script type="text/javascript">
-    var dom = document.getElementById("container");
-    var myChart = echarts.init(dom);
-    var app = {};
-    function randomData() {
-        return Math.round(Math.random()*1000);
-    }
-    option = null;
-    myChart.showLoading();
-
-    $.getJSON('https://echarts.apache.org/examples/data/asset/data/aqi-beijing.json', function (geoJson) {
-        myChart.hideLoading();
-        echarts.registerMap('重庆', geoJson);
-
-
-        myChart.setOption(option = {
-            title: {
-                text: '重庆市地图',
-                subtext: '数据来自Echarts',
-                left: 'center'
-            },
-            toolbox: {
-                show: true,
-                orient: 'vertical',
-                left: 'right',
-                top: 'center',
-                feature: {
-                    dataView: {readOnly: false},
-                    restore: {},
-                    saveAsImage: {}
-                }
-            },
-            visualMap: {
-                min: 0,
-                max: 1500,
-                text:['High','Low'],
-                realtime: false,
-                calculable: true,
-                inRange: {
-
-                    color: ['#e0ffff', '#006edd']
-                }
-            },
-            series: [
-                {
-                    name: '重庆市地图',
-                    type: 'map',
-                    mapType: '重庆', // 自定义扩展图表类型
-                    itemStyle:{
-                        normal:{label:{show:true}},
-                        emphasis:{label:{show:true}}
-                    },
-                    data:[
-                        {name: '奉节县', value: randomData()},
-                        {name: '巫溪县', value: randomData()},
-                        {name: '开州区', value: randomData()},
-                        {name: '酉阳土家族苗族自治县', value: randomData()},
-                        {name: '彭水苗族土家族自治县', value: randomData()},
-                        {name: '云阳县', value: randomData()},
-                        {name: '万州区', value: randomData()},
-                        {name: '城口县', value: randomData()},
-                        {name: '江津区', value: randomData()},
-                        {name: '石柱土家族自治县', value: randomData()},
-                        {name: '巫山县', value: randomData()},
-                        {name: '涪陵区', value: randomData()},
-                        {name: '丰都县', value: randomData()},
-                        {name: '武隆区', value: randomData()},
-                        {name: '南川区', value: randomData()},
-                        {name: '秀山土家族苗族自治县', value: randomData()},
-                        {name: '黔江区', value: randomData()},
-                        {name: '合川区', value: randomData()},
-                        {name: '綦江区', value: randomData()},
-                        {name: '忠县', value: randomData()},
-                        {name: '梁平县', value: randomData()},
-                        {name: '巴南区', value: randomData()},
-                        {name: '潼南区', value: randomData()},
-                        {name: '永川区', value: randomData()},
-                        {name: '垫江县', value: randomData()},
-                        {name: '渝北区', value: randomData()},
-                        {name: '长寿区', value: randomData()},
-                        {name: '大足区', value: randomData()},
-                        {name: '铜梁区', value: randomData()},
-                        {name: '荣昌区', value: randomData()},
-                        {name: '璧山区', value: randomData()},
-                        {name: '北碚区', value: randomData()},
-                        {name: '万盛区', value: randomData()},
-                        {name: '九龙坡区', value: randomData()},
-                        {name: '沙坪坝区', value: randomData()},
-                        {name: '南岸区', value: randomData()},
-                        {name: '江北区', value: randomData()},
-                        {name: '大渡口区', value: randomData()},
-
-                        {name: '渝中区', value: randomData()},
-
-                    ],
-                    // 自定义名称映射
-
-                }
-            ]
+    $(function(){
+        var myChart = echarts.init(document.getElementById('map'));
+        $.get('../static/js/hanzhong.geojson',function(geoJson){
+            echarts.registerMap('xicheng',geoJson,{});
+            var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}<br/>{c} (p / km2)'
+                },
+                visualMap: {
+                    min: 500,
+                    max: 50000,
+                    text:['High','Low'],
+                    left: 'right',
+                    realtime: false,
+                    calculable: true,
+                    inRange: {
+                        color: ['#313695','#4575b4', '#74add1','#abd9e9','#e0f3f8']
+                    }
+                },
+                series: [
+                    {
+                        name: '西城',
+                        type: 'map',
+                        mapType: 'xicheng',
+                        aspectScale: 0.85,  //地图长度比
+                        label: {
+                            normal: {
+                                show: true,
+                                textStyle: {
+                                    color: '#fff'
+                                }
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    color: '#333'
+                                }
+                            }
+                        },
+                        data: [
+                            {name: '德胜门', value: 17000},
+                            {name: '什刹海', value: 1000},
+                            {name: '新街口', value: 5000},
+                            {name: '展览路', value: 20000},
+                            {name: '月坛', value: 25000},
+                            {name: '金融街', value: 30000},
+                            {name: '西长安街', value: 18000},
+                            {name: '广安门外', value: 2300},
+                            {name: '广安门内', value: 20000},
+                            {name: '大栅栏', value: 16000},
+                            {name: '陶然亭', value: 28000}
+                        ]
+                    }
+                ]
+            };
+            myChart.setOption(option);
         });
     });
-    if (option && typeof option === "object") {
-        myChart.setOption(option, true);
-    }
+
 </script>
 </body>
 </html>
