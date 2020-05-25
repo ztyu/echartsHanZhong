@@ -15,7 +15,7 @@ class DemoApplicationTests {
     @Test
     public void simpleWrite() {
         try {
-            String filePath = "C:\\Users\\75673\\Desktop\\123.xls";
+            String filePath = "C:\\Users\\yuzhengteng2\\Desktop\\汉中烟草适应性数据.xls";
             FileInputStream inputStream = new FileInputStream(filePath);
 //        2.通过poi解析流 HSSFWorkbook 处理流得到的对象中 就封装了Excel文件所有的数据
             HSSFWorkbook workbook = new HSSFWorkbook(inputStream);
@@ -39,6 +39,7 @@ class DemoApplicationTests {
                         String value = row.getCell(j).getStringCellValue();
                         System.out.println(value + "-------------");
                     }
+
                 }
             }
 

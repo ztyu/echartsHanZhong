@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+<br lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>第一个 ECharts 实例1</title>
-    <!-- 引入 echarts.js -->
-    <!--<script th:src="@{/static/js/echarts.min.js}" ></script>-->
+    <title>汉中市烟区适应图</title>
 </head>
-<body>
-<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<form method="POST" action="/map/upload" enctype="multipart/form-data">
+    <input type="file" name="file" />
+    <input type="submit" value="提交" /></form>
+<br>
 <div id="main" style="width: 100%;height:900px;"></div>
 <script type="text/javascript" th:src="@{/static/js/jquery.js}"></script>
 <script type="text/javascript" th:src="@{/static/js/echarts.min.js}"></script>
@@ -18,65 +18,37 @@
 <script type="text/javascript">
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'));
-
-    /*// 指定图表的配置项和数据
-    var option = {
-        title: {
-            text: '第一个 ECharts 实例'
-        },
-        tooltip: {},
-        legend: {
-            data:['销量']
-        },
-        xAxis: {
-            data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
-        },
-        yAxis: {},
-        series: [{
-            name: '销量',
-            type: 'bar',
-            data: [5, 20, 36, 10, 10, 20]
-        }]
-    };
-
-    // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);*/
-    //var uploadedDataURL = "../static/js/hanzhong.geojson";
-    //container 为div的id
-    /*var uploadedDataURL = getGeoJson();
-    console.info("------" + JSON.parse(uploadedDataURL));*/
-
     showProvince();
-
     function showProvince() {
-        console.info("----------------1");
-        var name = 'bj';
         //myChart.showLoading();
-
         $.ajax({
-            url: "http://127.0.0.1:8088/static/js/hz.geojson",
+            url: "http://127.0.0.1:8088/map/getCityData",
             dataType: "text",
-            success: function (data) {
-                showMap(data);
-
+            success: function (cityValue) {
+                $.ajax({
+                    url: "http://127.0.0.1:8088/static/js/hz.geojson",
+                    dataType: "text",
+                    success: function (data) {
+                        showMap(data,cityValue);
+                    }
+                })
             }
-        })
+        });
+
     }
 
 
-    function showMap(geoJson){
-        var name = 'bj';
+    function showMap(geoJson, cityValue) {
+        var name = '汉中';
         echarts.registerMap(name, geoJson);
-
         myChart.setOption(option = {
             tooltip: {
                 trigger: 'item',
-                formatter: '{b}<br/>{c} (p / km2)'
+                formatter: '{b}<br/>{c}'
             },
             backgroundColor: '#044060',
             title: {
                 text: "汉中市烟区适应图",
-
                 left: 'center',
                 textStyle: {
                     color: '#ffffff'
@@ -89,8 +61,8 @@
                 top: 'bottom',
                 text: ['高', '低'], // 文本，默认为数值文本
                 calculable: true,
-                inRange:{
-                    color: ['yellow','lightskyblue', 'orangered']
+                inRange: {
+                    color: ['yellow', 'lightskyblue', 'orangered']
                 },
                 textStyle: {
                     color: '#ffffff'
@@ -110,7 +82,6 @@
                     }
                 },
                 itemStyle: {
-
                     normal: {
                         borderColor: '#389BB7',
                         areaColor: '#fff',
@@ -121,41 +92,7 @@
                     }
                 },
                 animation: false,
-                data: [{
-                    name: '略阳县',
-                    value: 18163
-                }, {
-                    name: '勉县',
-                    value: 22036
-                }, {
-                    name: '留坝县',
-                    value: 22036
-                }, {
-                    name: '城固县',
-                    value: 22036
-                }, {
-                    name: '洋县',
-                    value: 22036
-                }, {
-                    name: '佛坪县',
-                    value: 22036
-                }, {
-                    name: '西乡县',
-                    value: 22036
-                }, {
-                    name: '镇巴县',
-                    value: 22036
-                }, {
-                    name: '南郑区',
-                    value: 22036
-                }, {
-                    name: '宁强县',
-                    value: 100
-                }, {
-                    name: '汉台区',
-                    value: 200
-                }
-                ]
+                data: JSON.parse(cityValue)
                 // animationDurationUpdate: 1000,
                 // animationEasingUpdate: 'quinticInOut'
             }]
@@ -164,27 +101,9 @@
 
     myChart.on('click', function(param) {
         console.log("------------------gregre");
-        //遍历取到provincesText 中的下标  去拿到对应的省js
     });
 
 
-
-    /*//展示对应的省
-    function getGeoJson(pText,pName) {
-        loadBdScript('$' + pName + 'JS', 'static/js/' + pName + '.geojson', function() {
-            //初始化echarts
-            //initEcharts(pText);
-        });
-    }
-    //加载对应的JS
-    function loadBdScript(scriptId, url, callback) {
-        var script = document.createElement("script");
-        script.type = "text/javascript";
-        script.src = "/static/js/hanzhong.geojson";
-        //script.src = "/static/js/demo.js";
-        script.id = scriptId;
-        document.getElementsByTagName("head")[0].appendChild(script);
-    };*/
 
 
 </script>
