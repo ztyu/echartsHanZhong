@@ -19,19 +19,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 @Controller
 @RequestMapping("/map")
 public class MapController {
 
-
     private static String UPLOADED_FOLDER = "D://map//";
-
 
     @RequestMapping("/getindex")
     public String index() {
-        System.out.println("--------------------------------ii");
         return "index";
     }
 
@@ -57,7 +55,6 @@ public class MapController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return "index";
     }
 
@@ -72,8 +69,8 @@ public class MapController {
             System.out.println("lastRowNum-----------" + lastRowNum);
             for (int i = 1; i <= lastRowNum; i++) {
                 HSSFRow row = sheet.getRow(i);
-                if (row.getCell(i) != null) {
-                    row.getCell(i).setCellType(Cell.CELL_TYPE_STRING);
+                if (null !=row.getCell(0)) {
+                    row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
                     double acount = 0;
                     String name = "";
                     for (int j = 0; j < 7; j++) {
@@ -81,10 +78,10 @@ public class MapController {
                             name = row.getCell(0).getStringCellValue();
                         }else {
                             acount += Double.valueOf(row.getCell(j).getStringCellValue());
-
                         }
                     }
-                    jsonArray.add(new CityDo(name, acount));
+                    DecimalFormat df = new DecimalFormat(".##");
+                    jsonArray.add(new CityDo(name, df.format(acount / 7)));
                 }
             }
             return jsonArray;

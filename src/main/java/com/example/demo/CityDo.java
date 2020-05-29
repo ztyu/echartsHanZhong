@@ -3,7 +3,7 @@ package com.example.demo;
 public class CityDo {
 
     private String name;
-    private Double value;
+    private String value;
 
     public String getName() {
         return name;
@@ -13,17 +13,17 @@ public class CityDo {
         this.name = name;
     }
 
-    public Double getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(Double value) {
+    public void setValue(String value) {
         this.value = value;
     }
 
     private CityDo(){}
 
-    public CityDo (String name, Double value) {
+    public CityDo (String name, String value) {
         this.name = name;
         this.value = value;
 
